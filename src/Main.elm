@@ -38,14 +38,14 @@ type Msg
 update : Msg -> Model -> ( Model, Cmd Msg)
 update msg model =
     case msg of
-        LinkClicked urlRequest ->
+        LinkClicked _ ->
             ( model, Cmd.none )
-        UrlChanged url ->
+        UrlChanged _ ->
             ( model, Cmd.none )
 
 
 view : Model -> Browser.Document Msg
-view model =
+view _ =
     { title = "Sup"
     , body = [ div []
         [ div [][text "Hey"]
@@ -54,7 +54,7 @@ view model =
 
 
 init : JD.Value -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
-init javascriptParametersFromJavaScript url key =
+init _ url key =
     ( initialModel Local "token" key url, Cmd.none )
 
 subscriptions : Model -> Sub Msg
