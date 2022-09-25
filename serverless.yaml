@@ -1,0 +1,156 @@
+service: heimdallui
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: us-east-1
+
+custom:
+  repository: stuff
+  domainName: heimdall
+  domainEnabled: false
+  branch: main
+  # dev:
+  #   domain: qa.heimdall.com
+  #   canary: heimdalldev
+  # staging:
+  #   domain: stage.heimdall.com
+  #   canary: heimdalldevstaging
+  # production:
+  #   domain: heimdall.com
+  #   canary: heimdalldevprod
+
+resources:
+  Conditions:
+    UseDomainName:
+      !Equals
+        - ${{self:custom.domainEnabled}}
+        - true
+  Resources:
+    AmplifyApp:
+      Type: "AWS::Amplify::App"
+      Properties:
+        Name: heimdallui${sls:stage, 'dev'}
+        # Repository: some repo url
+        # AccessToken: some token
+        EnvironmentVariables:
+          - Name: ENV
+            Value: ${sls:stage}
+        # BuildSpec: |-
+        #   version: 0.1
+        #   frontend:
+        #     phases:
+        #       preBuild:
+        #         commands:
+        #           - npm ci
+        #           - sh generate-environment.sh
+        #       build:
+        #         commands:
+        #           - npm run review
+        #           - npm run build
+        #     artifacts:
+        #       baseDirectory: /public
+        #       files:
+        #         - '**/*'
+        #     cache:
+        #       paths:
+        #         - node_modules/**/*
+        #   test:
+        #     phases:
+        #       preTest:
+        #         commands:
+        #           - npm ci
+        #           - npm install wait-on
+        #           - npm install pm2
+        #           - npm install kill
+        #           - npm install mochawesome mochawesome-merge mochawesome-report-generator
+        #           - npx pm2 start npm -- start
+        #           - 'npx wait-on http://localhost:8001'
+        #       test:
+        #         commands:
+        #           - npm run test
+        #           - sh run-e2e-tests.sh
+        #       postTest:
+        #         commands:
+        #           - npx mochawesome-merge cypress/report/mochawesome-report/mochawesome*.json > cypress/report/mochawesome.json
+        #           - npx pm2 kill
+        #     artifacts:
+        #       baseDirectory: cypress
+        #       configFilePath: '**/mochawesome.json'
+        #       files:
+        #         - '**/*.png'
+        #         - '**/*.mp4'
+
+    # # Do this second
+    # AmplifyBranch:
+    #   Type: AWS::Amplify::Branch
+    #   Properties:
+    #     AppId: !GetAtt AmplifyApp.AppId
+    #     BranchName: main
+    #     EnableAutoBuild: false
+    #     Stage: PRODUCTION
+
+    # AmplifyBranchRollback:
+    #   Type: AWS::Amplify::Branch
+    #   Properties:
+    #     AppId: !GetAtt AmplifyApp.AppId
+    #     BranchName: main-minus-one
+    #     EnableAutoBuild: false
+    #     Stage: PRODUCTION
+
+    # # Do this third
+    # AmplifyDomain:
+    #   Type: AWS::Amplify::Domain
+    #   Properties:
+    #     AppId: !GetAtt AmplifyApp.AppId
+    #     AutoSubDomainCreationPatterns:
+    #       - main
+    #     # AutoSubDomainIAMRole:
+    #     DomainName: ${self:custom.${sls:stage}.domain}
+    #     SubDomainSettings:
+    #       - BranchName: main
+    #         Prefix: heimdall-ui
+    
+    # AmplifyBranch:
+    #   Type: AWS::Amplify::Branch
+    #   Properties:
+    #     AppId: !GetAtt AmplifyApp.AppId
+    #     BranchName: main
+    #     EnableAutoBuild: ${self:custom.${sls:stage}.autoBuildEnabled}
+    #     Stage: PRODUCTION
+
+    
+
+
+    # SyntheticCanary:
+    #   Type: AWS::Synthetics::Canary
+    #   Properties:
+    #     DeleteLambdaResourcesOnCanaryDeletion: true
+    #     ArtifactS3Location: s3://serverless bucket
+    #     Code:
+    #       Handler: index.handler
+    #       S3Bucket: serverless bucket
+    #       S3Key: synthetic-canary.zip
+    #     ExecutionRoleArn: iam role arn
+    #     Name: ${self:custom.${sls:stage}.canary}
+    #     RunConfig: 
+    #       TimeoutInSeconds: 60
+    #     RuntimeVersion: syn-nodejs-puppeteer-3.6
+    #     Schedule: 
+    #       Expression: "rate(1 hour)"
+    #       DurationInSeconds: 0
+    #     StartCanaryAfterCreation: True
+    
+      
+  Outputs:
+    # AmplifyAppId:
+    #   Value: !Ref AmplifyApp
+
+    DefaultDomain:
+      # Value: !Sub ${{self:custom.branch}}.${AmplifyApp.DefaultDomain}
+      Value: main.heimdall
+
+    BranchUrl:
+      Condition: UseDomainName
+      # Value: !Sub ${AmplifyBranch.BranchName}.${AmplifyDomain.DomainName}
+      Value: main.heimdall

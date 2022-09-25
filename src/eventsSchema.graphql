@@ -1,0 +1,77 @@
+type Query {
+  listEvents(timeRange: InputTimeRange!, first: Int!, after: String!): EventsResponse!
+  createEvent(event: InputCreateEvent!): Event!
+  deleteEvent(eventID: ID!): ID!
+  editEvent(event: InputCreateEvent!): Event!
+
+  createApp(app: InputApp!): App!
+  listApps(first: Int!, after: String!): AppsResponse!
+  deleteApp(id: ID!): ID!
+  updateApp(app: InputApp!): App!
+}
+
+input InputTimeRange {
+  start: Float!
+  end: Float!
+}
+
+type EventsResponse {
+  events: [Event!]
+  cursor: String
+}
+
+type Event {
+  eventName: String!
+  lastUpdated: Int!
+  permission: Permission!
+  end: Int!
+  PK: ID!
+  start: Int!
+}
+
+type TimeRange {
+  start: Float!
+  end: Float!
+}
+
+enum Permission {
+  Free
+  Blocked
+  Request
+}
+
+input InputCreateEvent {
+  eventName: String!
+  lastUpdated: Int!
+  permission: Permission!
+  end: Int!
+  PK: ID!
+  start: Int!
+}
+
+input InputApp {
+  name: String!
+  owner: String!
+  lead: String!
+  appType: AppType!
+}
+
+type App {
+  id: ID!
+  name: String!
+  owner: String!
+  lead: String!
+  appType: AppType!
+}
+
+enum AppType {
+  Associate
+  Merchant
+  StoreCustomer
+}
+
+type AppsResponse {
+  apps: [App!]
+  cursor: String
+}
+
