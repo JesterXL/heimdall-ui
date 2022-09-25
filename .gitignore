@@ -3,3 +3,4 @@ elm-stuff
 src/tailwind.build.css
 src/elm.js
 .serverless
+public

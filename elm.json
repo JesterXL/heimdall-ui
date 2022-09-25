@@ -13,21 +13,12 @@
             "elm/url": "1.0.0"
         },
         "indirect": {
-            "TSFoster/elm-bytes-extra": "1.3.0",
-            "TSFoster/elm-md5": "2.0.1",
-            "TSFoster/elm-sha1": "2.1.1",
-            "danfishgold/base64-bytes": "1.1.0",
-            "elm/regex": "1.0.0",
             "elm/time": "1.0.0",
-            "elm/virtual-dom": "1.0.2",
-            "j-maas/elm-ordered-containers": "1.0.0",
-            "lukewestby/elm-string-interpolate": "1.0.4",
-            "rtfeldman/elm-hex": "1.0.0"
+            "elm/virtual-dom": "1.0.3"
         }
     },
     "test-dependencies": {
-        "direct": {
-        },
+        "direct": {},
         "indirect": {}
     }
 }
