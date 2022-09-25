@@ -1,0 +1,39 @@
+version: 0.1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - npm ci
+        - sh generate-environment.sh
+    build:
+      commands:
+        - npm run review
+        - npm run build
+  artifacts:
+    baseDirectory: /public
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
+# test:
+#   phases:
+#     preTest:
+#       commands:
+#         - npm ci
+#         - npx pm2 start npm -- start
+#         - 'npx wait-on http://localhost:8001'
+#     test:
+#       commands:
+#         - npm run test
+#         - sh run-e2e-tests.sh
+#     postTest:
+#       commands:
+#         - npx mochawesome-merge cypress/report/mochawesome-report/mochawesome*.json > cypress/report/mochawesome.json
+#         - npx pm2 kill
+#   artifacts:
+#     baseDirectory: cypress
+#     configFilePath: '**/mochawesome.json'
+#     files:
+#       - '**/*.png'
+#       - '**/*.mp4'
