@@ -48,7 +48,7 @@ view : Model -> Browser.Document Msg
 view model =
     { title = "Sup"
     , body = [ div []
-        [ div [][]
+        [ div [][text "Hey"]
         ]
     ] }
 

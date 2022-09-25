@@ -25,7 +25,7 @@
     "watch:css": "tailwindcss -c tailwind.config.cjs -i ./src/tailwind.css -o src/tailwind.build.css --watch",
     "build": "npm run clean && npm run compile && npm run copy",
     "clean": "rm -rf public",
-    "copy": "mkdir public && cp src/elm.js public/elm.js && cp src/elmApp.js public/elmApp.js && cp src/environment.js public/environment.js && cp src/token.js public/token.js && cp src/index.html public/index.html && cp src/tailwind.build.css public/tailwind.build.css && cp -R src/fonts public/fonts && cp -R src/images public/images",
+    "copy": "mkdir public && cp src/elm.js public/elm.js && cp src/elmApp.js public/elmApp.js && cp src/environment.js public/environment.js && cp src/token.js public/token.js && cp src/index.html public/index.html && cp src/tailwind.build.css public/tailwind.build.css",
     "deploy": "sls deploy",
     "canary:zip": "rm synthetic-canary.zip | true && cd ./synthetic-canary && zip -r synthetic-canary.zip ./nodejs/* && cd - && mv ./synthetic-canary/synthetic-canary.zip ./synthetic-canary.zip"
   },
